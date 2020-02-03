@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block title %}错误{% endblock %}
+
+{% block nav_home_active %}active{% endblock %}
+
+{% block content %}
+    <h3 class="home-content">{{ message }}</h3>
+    <a href="{{ redirect_to }}">返回</a>
+{% endblock %}

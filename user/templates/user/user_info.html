@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}个人资料{% endblock %}
+
+{% block nav_home_active %}active{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-4 col-xs-offset-4">
+                {% if user.is_authenticated %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">头像</h3>
+                            <h3 class="panel-title">{{ user.username }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>昵称：{{ user.profile.nickname }}&nbsp;<a href="{% url 'change_nickname' %}?from={{ request.get_full_path }}">修改用户名</a></li>
+                                <li>邮箱：{% if user.email %}{{ user.email }}{% else %}未绑定&nbsp;<a href="{% url 'bind_email' %}?from={{ request.get_full_path }}">绑定邮箱</a>{% endif %}</li>
+                                <li>上一次登陆时间：{{ user.last_login|date:"Y-m-d H:i:s" }}</li>
+                                <li><a href="{% url 'change_password' %}?from={{ request.get_full_path }}">修改密码</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                {% else %}
+                    <span>未登录，3秒后将跳转到首页......</span>
+                    <a href="/">首页</a>
+                    <script type="text/javascript">
+                        setTimeout("window.location.href = '/';", 3000);
+                    </script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

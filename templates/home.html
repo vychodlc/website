@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block title %}首页{% endblock%}
+
+{% block nav_home_active %}active{% endblock %}
+
+{% block content %}
+    <h3 class="home-content">欢迎访问我的网站</h3>
+    <div id="container"></div>
+    <div class="container">
+        <div class="row" id="hot_data">
+            <div class="col-md-3">
+                <h3>今日热门博客</h3>
+                <ul>
+                    {% for hot_data in today_hot_data %}
+                        <li><a href="{% url 'blog_detail' hot_data.content_object.pk %}">{{ hot_data.content_object.title }}</a>({{ hot_data.read_num }})</li>
+                    {% empty %}
+                        <li>今日暂无热门博客</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h3>昨日热门博客</h3>
+                <ul>
+                    {% for hot_data in yesterday_hot_data %}
+                        <li><a href="{% url 'blog_detail' hot_data.content_object.pk %}">{{ hot_data.content_object.title }}</a>({{ hot_data.read_num }})</li>
+                    {% empty %}
+                        <li>今日暂无热门博客</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h3>本周热门博客</h3>
+                <ul>
+                    {% for hot_blog in week_hot_blogs %}
+                        <li><a href="{% url 'blog_detail' hot_blog.id %}">{{ hot_blog.title }}</a>({{ hot_blog.read_num_sum }})</li>
+                    {% empty %}
+                        <li>昨日暂无热门博客</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h3>本月热门博客</h3>
+                <ul>
+                    {% for hot_blog in month_hot_blogs %}
+                        <li><a href="{% url 'blog_detail' hot_blog.id %}">{{ hot_blog.title }}</a>({{ hot_blog.read_num_sum }})</li>
+                    {% empty %}
+                        <li>昨日暂无热门博客</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+    <script>
+        // 图表配置
+        var options = {
+            chart: {type: 'line'},
+            title: {text: null},
+            xAxis: {
+                categories: {{ dates|safe }},
+                tickmarkPlacement: 'on',
+            },
+            yAxis: {
+                title: {text: null},
+                labels: {enabled: false}
+            },
+            series: [{                              // 数据列
+                name: '近七日阅读量',                        // 数据列名
+                data: {{ read_nums }}                     // 数据
+            }],
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: {enabled: false},
+            credits: {enabled: false},
+        };
+        // 图表初始化函数
+        var chart = Highcharts.chart('container', options);
+    </script>
+{% endblock%}
