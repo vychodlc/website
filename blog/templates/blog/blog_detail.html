@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="comment-area">
-                    <h3 class="comment-area-title">提交评论</h3>
+                    <h3 class="comment-area-title" id='submit-commit-area'>提交评论</h3>
                     {% if user.is_authenticated %}
                         <form id="comment_form" action="{% url 'update_comment' %}" method="POST" style="overflow: hidden;">
                             <label>{{ user.get_nickname_or_username }}，欢迎评论 ~</label> 
@@ -107,9 +107,13 @@
                         </form>
                     {% else %}
                         未登录,登陆后方可评论
-                        <a href="{% url 'login' %}?from={{ request.get_full_path }}">登录</a>
+                        <a href="{% url 'login' %}?from={{ request.get_full_path }}">
+                            <input type="submit" value="登录" class="btn btn-primary">
+                        </a>
                         <span> or </span>
-                        <a href="{% url 'register' %}?from={{ request.get_full_path }}">注册</a>
+                        <a href="{% url 'register' %}?from={{ request.get_full_path }}">
+                            <input type="submit" value="注册" class="btn btn-danger">
+                        </a>
                     {% endif %}
                 </div>
             </div>
@@ -182,8 +186,10 @@
             var html = $('#comment_'+reply_comment_id).html();
             $('#reply_content').html(html);
             $('#reply_content_container').show();
-            $('html').animate({scrollTop: $('#comment_form').offset().top-60}, 300, function(){
-                CKEDITOR.instances['id_text'].focus();
+            $('html').animate({scrollTop: $('#submit-commit-area').offset().top-60}, 300, function(){
+                if($("#id_text").length>0){
+                    CKEDITOR.instances['id_text'].focus();
+                }
             });
         };
         function likeChange(obj, content_type, object_id){
